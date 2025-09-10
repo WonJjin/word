@@ -1,672 +1,122 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>글자 놀이</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-            min-height: 100vh;
-            padding: 10px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            color: #2c3e50;
-            font-size: 2.2em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .header p {
-            color: #7f8c8d;
-            font-size: 1.1em;
-        }
-        
-        .upload-section {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            border: 3px dashed #3498db;
-        }
-        
-        .upload-group {
-            margin-bottom: 20px;
-        }
-        
-        .upload-group h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            text-align: center;
-        }
-        
-        .file-input-wrapper {
-            position: relative;
-            display: block;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        
-        .file-input {
-            opacity: 0;
-            width: 100%;
-            height: 50px;
-            position: absolute;
-            cursor: pointer;
-        }
-        
-        .file-input-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 50px;
-            background: #3498db;
-            color: white;
-            border-radius: 10px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .file-input-button:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-        
-        .record-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-        
-        .record-btn, .stop-btn, .play-recorded-btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            max-width: 120px;
-        }
-        
-        .record-btn {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .record-btn:hover {
-            background: #c0392b;
-        }
-        
-        .record-btn.recording {
-            background: #f39c12;
-            animation: pulse 1s infinite;
-        }
-        
-        .stop-btn {
-            background: #95a5a6;
-            color: white;
-        }
-        
-        .stop-btn:hover {
-            background: #7f8c8d;
-        }
-        
-        .play-recorded-btn {
-            background: #27ae60;
-            color: white;
-        }
-        
-        .play-recorded-btn:hover {
-            background: #219a52;
-        }
-        
-        .word-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #3498db;
-            border-radius: 10px;
-            font-size: 1.1em;
-            margin-top: 10px;
-        }
-        
-        .add-word-btn {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-        }
-        
-        .add-word-btn:hover {
-            background: #219a52;
-            transform: translateY(-2px);
-        }
-        
-        .add-word-btn:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .words-display {
-            margin-top: 30px;
-        }
-        
-        .words-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .word-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            border: 3px solid #3498db;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .word-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            border-color: #e74c3c;
-        }
-        
-        .word-card.playing {
-            border-color: #f39c12;
-            animation: cardPulse 1s infinite;
-        }
-        
-        .word-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            border: 2px solid #ecf0f1;
-        }
-        
-        .word-title {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-        
-        .card-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .play-icon {
-            font-size: 2.5em;
-            color: #e74c3c;
-            background: rgba(231, 76, 60, 0.1);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .delete-btn {
-            background: #95a5a6;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 50%;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .delete-btn:hover {
-            background: #e74c3c;
-            transform: scale(1.1);
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 50px;
-            color: #7f8c8d;
-            font-size: 1.2em;
-            grid-column: 1 / -1;
-        }
-        
-        .status-message {
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-weight: bold;
-        }
-        
-        .status-recording {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        @keyframes cardPulse {
-            0% { transform: translateY(-5px) scale(1); }
-            50% { transform: translateY(-5px) scale(1.02); }
-            100% { transform: translateY(-5px) scale(1); }
-        }
-        
-        .instructions {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-        }
-        
-        .instructions h3 {
-            color: #856404;
-            margin-bottom: 8px;
-            font-size: 1.1em;
-        }
-        
-        .instructions ul {
-            color: #856404;
-            margin-left: 15px;
-        }
-        
-        .instructions li {
-            margin-bottom: 3px;
-        }
-        
-        /* 모바일 최적화 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                margin: 5px;
-            }
-            
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .words-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .word-card {
-                padding: 15px;
-            }
-            
-            .word-image {
-                height: 180px;
-            }
-            
-            .record-controls {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .record-btn, .stop-btn, .play-recorded-btn {
-                max-width: none;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>글자 놀이</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); min-height: 100vh; padding: 10px; }
+.container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.header { text-align: center; margin-bottom: 30px; }
+.header h1 { color: #2c3e50; font-size: 2.2em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+.header p { color: #7f8c8d; font-size: 1.1em; }
+.upload-section { background: #f8f9fa; border-radius: 15px; padding: 20px; margin-bottom: 30px; border: 3px dashed #3498db; }
+.upload-group { margin-bottom: 20px; }
+.upload-group h3 { color: #2c3e50; margin-bottom: 15px; font-size: 1.2em; text-align: center; }
+.file-input-wrapper { position: relative; display: block; width: 100%; margin-bottom: 10px; }
+.file-input { opacity: 0; width: 100%; height: 50px; position: absolute; cursor: pointer; }
+.file-input-button { display: flex; align-items: center; justify-content: center; width: 100%; height: 50px; background: #3498db; color: white; border-radius: 10px; font-size: 1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
+.file-input-button:hover { background: #2980b9; transform: translateY(-2px); }
+.add-word-btn { background: #27ae60; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; transition: all 0.3s ease; }
+.add-word-btn:hover { background: #219a52; transform: translateY(-2px); }
+.words-display { margin-top: 30px; }
+.words-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+.word-card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 3px solid #3498db; transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden; }
+.word-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); border-color: #e74c3c; }
+.word-image { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; border: 2px solid #ecf0f1; }
+.word-title { font-size: 1.8em; font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+.delete-btn { background: #95a5a6; color: white; border: none; padding: 10px 15px; border-radius: 50%; font-size: 1.2em; cursor: pointer; transition: all 0.3s ease; position: absolute; top: 10px; right: 10px; }
+.delete-btn:hover { background: #e74c3c; transform: scale(1.1); }
+.empty-state { text-align: center; padding: 50px; color: #7f8c8d; font-size: 1.2em; grid-column: 1 / -1; }
+@media (max-width: 768px) { .words-grid { grid-template-columns: 1fr; gap: 15px; } .word-image { height: 180px; } }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🇰🇷 글자 놀이 🎵</h1>
-            <p>아이들이 쓴 한글로 함께 배워요!</p>
-        </div>
-        
-        <div class="instructions">
-            <h3>📝 사용 방법</h3>
-            <ul>
-                <li>1. 아이가 쓴 단어 사진을 선택하세요</li>
-                <li>2. 음성파일을 업로드하거나 직접 녹음하세요</li>
-                <li>3. 단어 이름을 입력하고 추가하세요</li>
-                <li>4. 완성된 카드를 터치하면 음성이 재생됩니다!</li>
-            </ul>
-        </div>
-        
-        <div class="upload-section">
-            <div class="upload-group">
-                <h3>📷 단어 사진 선택</h3>
-                <div class="file-input-wrapper">
-                    <input type="file" id="imageInput" class="file-input" accept="image/*" capture="environment">
-                    <div class="file-input-button">
-                        📸 사진 선택하기
-                    </div>
-                </div>
+<div class="container">
+    <div class="header">
+        <h1>🇰🇷 글자 놀이 🎵</h1>
+        <p>아이들이 찍은 사진으로 단어 카드를 만들어요!</p>
+    </div>
+
+    <div class="upload-section">
+        <div class="upload-group">
+            <h3>📷 단어 사진 선택</h3>
+            <div class="file-input-wrapper">
+                <input type="file" id="imageInput" class="file-input" accept="image/*">
+                <div class="file-input-button">📸 사진 선택하기</div>
             </div>
-            
-            <div class="upload-group">
-                <h3>🎤 음성 추가</h3>
-                <div class="file-input-wrapper">
-                    <input type="file" id="audioInput" class="file-input" accept="audio/*">
-                    <div class="file-input-button">
-                        🔊 음성 파일 선택하기
-                    </div>
-                </div>
-                
-                <div class="record-controls">
-                    <button id="recordBtn" class="record-btn">🎤 녹음</button>
-                    <button id="stopBtn" class="stop-btn" disabled>⏹️ 정지</button>
-                    <button id="playRecordedBtn" class="play-recorded-btn" disabled>▶️ 재생</button>
-                </div>
-                
-                <div id="statusMessage"></div>
-            </div>
-            
-            <div class="upload-group">
-                <h3>✏️ 단어 입력</h3>
-                <input type="text" id="wordText" class="word-input" placeholder="예: 동해물과">
-            </div>
-            
-            <button id="addWordBtn" class="add-word-btn">➕ 단어 카드 만들기</button>
         </div>
-        
-        <div class="words-display">
-            <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">🎯 우리가 만든 애국가 단어 카드</h2>
-            <div id="wordsGrid" class="words-grid">
-                <div class="empty-state">
-                    <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 단어 카드를 만들어주세요! 😊</p>
-                </div>
+        <button id="addWordBtn" class="add-word-btn">➕ 단어 카드 만들기</button>
+    </div>
+
+    <div class="words-display">
+        <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">🎯 우리가 만든 애국가 단어 카드</h2>
+        <div id="wordsGrid" class="words-grid">
+            <div class="empty-state">
+                <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 단어 카드를 만들어주세요! 😊</p>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // 전역 변수
-        let wordsData = [];
-        let mediaRecorder = null;
-        let recordedChunks = [];
-        let recordedAudioBlob = null;
-        let currentAudio = null;
+<script>
+let wordsData = [];
+const imageInput = document.getElementById('imageInput');
+const addWordBtn = document.getElementById('addWordBtn');
+const wordsGrid = document.getElementById('wordsGrid');
 
-        // DOM 요소들
-        const imageInput = document.getElementById('imageInput');
-        const audioInput = document.getElementById('audioInput');
-        const wordText = document.getElementById('wordText');
-        const addWordBtn = document.getElementById('addWordBtn');
-        const wordsGrid = document.getElementById('wordsGrid');
-        const recordBtn = document.getElementById('recordBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        const playRecordedBtn = document.getElementById('playRecordedBtn');
-        const statusMessage = document.getElementById('statusMessage');
+// 이미지 선택 버튼 텍스트 변경
+imageInput.addEventListener('change', function(e){
+    const button = this.parentElement.querySelector('.file-input-button');
+    if(e.target.files.length > 0){
+        button.textContent = `📸 ${e.target.files[0].name}`;
+        button.style.background = '#27ae60';
+    }
+});
 
-        // 상태 메시지 표시 함수
-        function showStatus(message, type = 'info') {
-            statusMessage.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
-            setTimeout(() => {
-                statusMessage.innerHTML = '';
-            }, 3000);
-        }
+// 카드 생성
+addWordBtn.addEventListener('click', function(){
+    const imageFile = imageInput.files[0];
+    if(!imageFile){
+        alert('사진을 선택해주세요!');
+        return;
+    }
+    const imageUrl = URL.createObjectURL(imageFile);
+    const wordData = {
+        id: Date.now(),
+        text: imageFile.name.replace(/\.[^/.]+$/, ""), // 파일명에서 확장자 제거
+        imageUrl: imageUrl
+    };
+    wordsData.push(wordData);
+    displayWords();
+    imageInput.value = '';
+    imageInput.parentElement.querySelector('.file-input-button').textContent = '📸 사진 선택하기';
+    imageInput.parentElement.querySelector('.file-input-button').style.background = '#3498db';
+});
 
-        // 파일 선택 이벤트
-        imageInput.addEventListener('change', function(e) {
-            const button = this.parentElement.querySelector('.file-input-button');
-            if (e.target.files.length > 0) {
-                button.textContent = `📸 ${e.target.files[0].name}`;
-                button.style.background = '#27ae60';
-            }
-        });
+// 카드 표시
+function displayWords(){
+    if(wordsData.length === 0){
+        wordsGrid.innerHTML = `<div class="empty-state"><p>아직 만든 카드가 없어요.<br>위에서 첫 번째 단어 카드를 만들어주세요! 😊</p></div>`;
+        return;
+    }
+    wordsGrid.innerHTML = wordsData.map(word => `
+        <div class="word-card">
+            <img src="${word.imageUrl}" alt="${word.text}" class="word-image">
+            <div class="word-title">${word.text}</div>
+            <button class="delete-btn" onclick="event.stopPropagation(); deleteWord(${word.id});">🗑️</button>
+        </div>
+    `).join('');
+}
 
-        audioInput.addEventListener('change', function(e) {
-            const button = this.parentElement.querySelector('.file-input-button');
-            if (e.target.files.length > 0) {
-                button.textContent = `🔊 ${e.target.files[0].name}`;
-                button.style.background = '#27ae60';
-                recordedAudioBlob = null; // 파일 선택시 녹음 데이터 초기화
-                playRecordedBtn.disabled = true;
-            }
-        });
-
-        // 음성 재생 함수 (URL 버전)
-        function playAudioFromUrl(audioUrl, element) {
-            // 기존 오디오 정지
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
-            }
-
-            // 모든 재생 중 표시 제거
-            document.querySelectorAll('.playing').forEach(el => {
-                el.classList.remove('playing');
-            });
-
-            const audio = new Audio(audioUrl);
-            currentAudio = audio;
-            
-            // 재생 시작 애니메이션
-            element.classList.add('playing');
-            
-            // 모바일에서 재생을 위한 사용자 상호작용 후 재생
-            const playPromise = audio.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('음성이 재생되었습니다.');
-                }).catch(error => {
-                    console.error('음성 재생 오류:', error);
-                    showStatus('음성을 재생할 수 없습니다. 다시 시도해주세요.', 'error');
-                    element.classList.remove('playing');
-                });
-            }
-
-            // 재생 완료 이벤트
-            audio.addEventListener('ended', () => {
-                element.classList.remove('playing');
-                currentAudio = null;
-            });
-
-            // 에러 처리
-            audio.addEventListener('error', (e) => {
-                console.error('오디오 에러:', e);
-                element.classList.remove('playing');
-                showStatus('음성 파일에 문제가 있습니다.', 'error');
-                currentAudio = null;
-            });
-        }
-
-        // 카드 클릭시 음성 재생
-        function playCardAudio(audioUrl, cardElement) {
-            playAudioFromUrl(audioUrl, cardElement);
-        }
-
-        // 단어 추가
-        addWordBtn.addEventListener('click', function() {
-            const imageFile = imageInput.files[0];
-            const audioFile = audioInput.files[0];
-            const text = wordText.value.trim();
-
-            // 유효성 검사
-            if (!imageFile) {
-                showStatus('단어 이미지를 선택해주세요!', 'error');
-                return;
-            }
-            
-            if (!audioFile && !recordedAudioBlob) {
-                showStatus('음성 파일을 선택하거나 녹음해주세요!', 'error');
-                return;
-            }
-            
-            if (!text) {
-                showStatus('단어를 입력해주세요!', 'error');
-                return;
-            }
-
-            // 이미지 URL 생성
-            const imageUrl = URL.createObjectURL(imageFile);
-            
-            // 오디오 URL 생성
-            let audioUrl;
-            let audioName;
-            
-            if (recordedAudioBlob) {
-                audioUrl = URL.createObjectURL(recordedAudioBlob);
-                audioName = '녹음된 음성';
-            } else {
-                audioUrl = URL.createObjectURL(audioFile);
-                audioName = audioFile.name;
-            }
-
-            // 단어 데이터 생성
-            const wordData = {
-                id: Date.now(),
-                text: text,
-                imageUrl: imageUrl,
-                audioUrl: audioUrl,
-                imageName: imageFile.name,
-                audioName: audioName
-            };
-
-            // 데이터 배열에 추가
-            wordsData.push(wordData);
-
-            // 화면에 표시
-            displayWords();
-
-            // 입력 필드 초기화
-            resetInputs();
-            
-            showStatus('새로운 단어 카드가 추가되었습니다!', 'success');
-        });
-
-        // 단어들을 카드 형태로 표시
-        function displayWords() {
-            if (wordsData.length === 0) {
-                wordsGrid.innerHTML = `
-                    <div class="empty-state">
-                        <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 단어 카드를 만들어주세요! 😊</p>
-                    </div>
-                `;
-                return;
-            }
-
-            wordsGrid.innerHTML = wordsData.map(word => `
-                <div class="word-card" onclick="playCardAudio('${word.audioUrl}', this)">
-                    <img src="${word.imageUrl}" 
-                         alt="${word.text}" 
-                         class="word-image">
-                    <div class="word-title">${word.text}</div>
-                    <div class="card-controls">
-                        <div class="play-icon">🔊</div>
-                        <button class="delete-btn" onclick="event.stopPropagation(); deleteWord(${word.id});">🗑️</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // 단어 삭제
-        function deleteWord(id) {
-            if (confirm('이 단어 카드를 삭제하시겠습니까?')) {
-                wordsData = wordsData.filter(word => word.id !== id);
-                displayWords();
-                showStatus('단어 카드가 삭제되었습니다.', 'success');
-            }
-        }
-
-        // 입력 필드 초기화
-        function resetInputs() {
-            imageInput.value = '';
-            audioInput.value = '';
-            wordText.value = '';
-            recordedAudioBlob = null;
-            
-            // 버튼 텍스트 초기화
-            document.querySelector('#imageInput').parentElement.querySelector('.file-input-button').textContent = '📸 사진 선택하기';
-            document.querySelector('#imageInput').parentElement.querySelector('.file-input-button').style.background = '#3498db';
-            
-            document.querySelector('#audioInput').parentElement.querySelector('.file-input-button').textContent = '🔊 음성 파일 선택하기';
-            document.querySelector('#audioInput').parentElement.querySelector('.file-input-button').style.background = '#3498db';
-            
-            playRecordedBtn.disabled = true;
-        }
-
-        // 엔터 키로 단어 추가
-        wordText.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addWordBtn.click();
-            }
-        });
-
-        // 모바일에서 오디오 재생을 위한 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            // 사용자의 첫 번째 터치/클릭 시 오디오 컨텍스트 활성화
-            document.body.addEventListener('touchstart', function initAudio() {
-                const audio = new Audio();
-                audio.play().then(() => {
-                    audio.pause();
-                }).catch(() => {
-                    // 무시
-                });
-                document.body.removeEventListener('touchstart', initAudio);
-            });
-        });
-    </script>
+// 카드 삭제
+function deleteWord(id){
+    if(confirm('이 단어 카드를 삭제하시겠습니까?')){
+        wordsData = wordsData.filter(word => word.id !== id);
+        displayWords();
+    }
+}
+</script>
 </body>
 </html>
