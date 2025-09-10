@@ -25,7 +25,6 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #ff
 .word-card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 3px solid #3498db; transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden; }
 .word-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); border-color: #e74c3c; }
 .word-image { width: 100%; height: 250px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; border: 2px solid #ecf0f1; }
-.word-title { font-size: 1.8em; font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
 .delete-btn { background: #95a5a6; color: white; border: none; padding: 10px 15px; border-radius: 50%; font-size: 1.2em; cursor: pointer; transition: all 0.3s ease; position: absolute; top: 10px; right: 10px; }
 .delete-btn:hover { background: #e74c3c; transform: scale(1.1); }
 .empty-state { text-align: center; padding: 50px; color: #7f8c8d; font-size: 1.2em; grid-column: 1 / -1; }
@@ -35,8 +34,8 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #ff
 <body>
 <div class="container">
     <div class="header">
-        <h1>🇰🇷 글자 놀이 🎵</h1>
-        <p>아이들이 찍은 사진으로 단어 카드를 만들어요!</p>
+        <h1>🇰🇷 글자놀이 🎵</h1>
+        <p>사진과 음성으로 단어 카드를 만들어요!</p>
     </div>
 
     <div class="upload-section">
@@ -47,14 +46,21 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #ff
                 <div class="file-input-button">📸 사진 선택하기</div>
             </div>
         </div>
-        <button id="addWordBtn" class="add-word-btn">➕ 단어 카드 만들기</button>
+        <div class="upload-group">
+            <h3>🔊 음성 파일 선택</h3>
+            <div class="file-input-wrapper">
+                <input type="file" id="audioInput" class="file-input" accept="audio/*">
+                <div class="file-input-button">🎵 음성 선택하기</div>
+            </div>
+        </div>
+        <button id="addWordBtn" class="add-word-btn">➕ 카드 만들기</button>
     </div>
 
     <div class="words-display">
-        <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">🎯 우리가 만든 애국가 단어 카드</h2>
+        <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">🎯 만든 단어 카드</h2>
         <div id="wordsGrid" class="words-grid">
             <div class="empty-state">
-                <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 단어 카드를 만들어주세요! 😊</p>
+                <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 카드를 만들어주세요! 😊</p>
             </div>
         </div>
     </div>
@@ -62,15 +68,25 @@ body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #ff
 
 <script>
 let wordsData = [];
+let currentAudio = null;
+
 const imageInput = document.getElementById('imageInput');
+const audioInput = document.getElementById('audioInput');
 const addWordBtn = document.getElementById('addWordBtn');
 const wordsGrid = document.getElementById('wordsGrid');
 
-// 이미지 선택 버튼 텍스트 변경
-imageInput.addEventListener('change', function(e){
+// 버튼 텍스트 변경
+imageInput.addEventListener('change', function(){
     const button = this.parentElement.querySelector('.file-input-button');
-    if(e.target.files.length > 0){
-        button.textContent = `📸 ${e.target.files[0].name}`;
+    if(this.files.length > 0){
+        button.textContent = `📸 ${this.files[0].name}`;
+        button.style.background = '#27ae60';
+    }
+});
+audioInput.addEventListener('change', function(){
+    const button = this.parentElement.querySelector('.file-input-button');
+    if(this.files.length > 0){
+        button.textContent = `🎵 ${this.files[0].name}`;
         button.style.background = '#27ae60';
     }
 });
@@ -78,41 +94,62 @@ imageInput.addEventListener('change', function(e){
 // 카드 생성
 addWordBtn.addEventListener('click', function(){
     const imageFile = imageInput.files[0];
-    if(!imageFile){
-        alert('사진을 선택해주세요!');
+    const audioFile = audioInput.files[0];
+    if(!imageFile || !audioFile){
+        alert('사진과 음성을 모두 선택해주세요!');
         return;
     }
+
     const imageUrl = URL.createObjectURL(imageFile);
+    const audioUrl = URL.createObjectURL(audioFile);
+
     const wordData = {
         id: Date.now(),
-        text: imageFile.name.replace(/\.[^/.]+$/, ""), // 파일명에서 확장자 제거
-        imageUrl: imageUrl
+        imageUrl: imageUrl,
+        audioUrl: audioUrl
     };
+
     wordsData.push(wordData);
     displayWords();
+
+    // 입력 초기화
     imageInput.value = '';
+    audioInput.value = '';
     imageInput.parentElement.querySelector('.file-input-button').textContent = '📸 사진 선택하기';
     imageInput.parentElement.querySelector('.file-input-button').style.background = '#3498db';
+    audioInput.parentElement.querySelector('.file-input-button').textContent = '🎵 음성 선택하기';
+    audioInput.parentElement.querySelector('.file-input-button').style.background = '#3498db';
 });
 
 // 카드 표시
 function displayWords(){
     if(wordsData.length === 0){
-        wordsGrid.innerHTML = `<div class="empty-state"><p>아직 만든 카드가 없어요.<br>위에서 첫 번째 단어 카드를 만들어주세요! 😊</p></div>`;
+        wordsGrid.innerHTML = `<div class="empty-state"><p>아직 만든 카드가 없어요.<br>위에서 첫 번째 카드를 만들어주세요! 😊</p></div>`;
         return;
     }
+
     wordsGrid.innerHTML = wordsData.map(word => `
-        <div class="word-card">
-            <img src="${word.imageUrl}" alt="${word.text}" class="word-image">
-            <div class="word-title">${word.text}</div>
+        <div class="word-card" onclick="playAudio('${word.audioUrl}', this)">
+            <img src="${word.imageUrl}" class="word-image">
             <button class="delete-btn" onclick="event.stopPropagation(); deleteWord(${word.id});">🗑️</button>
         </div>
     `).join('');
 }
 
+// 오디오 재생
+function playAudio(url, cardElement){
+    if(currentAudio){
+        currentAudio.pause();
+        currentAudio = null;
+    }
+
+    currentAudio = new Audio(url);
+    currentAudio.play();
+}
+
 // 카드 삭제
 function deleteWord(id){
-    if(confirm('이 단어 카드를 삭제하시겠습니까?')){
+    if(confirm('이 카드를 삭제하시겠습니까?')){
         wordsData = wordsData.filter(word => word.id !== id);
         displayWords();
     }
