@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>글자 놀이</title>
+    <title>글자놀이</title>
     <style>
         * {
             margin: 0;
@@ -47,27 +47,16 @@
         .upload-section {
             background: #f8f9fa;
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 30px;
-            border: 3px dashed #3498db;
-        }
-        
-        .upload-group {
-            margin-bottom: 20px;
-        }
-        
-        .upload-group h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            text-align: center;
+            border: 2px solid #e9ecef;
         }
         
         .file-input-wrapper {
             position: relative;
             display: block;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         .file-input {
@@ -98,66 +87,6 @@
             transform: translateY(-2px);
         }
         
-        .record-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-        
-        .record-btn, .stop-btn, .play-recorded-btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            max-width: 120px;
-        }
-        
-        .record-btn {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .record-btn:hover {
-            background: #c0392b;
-        }
-        
-        .record-btn.recording {
-            background: #f39c12;
-            animation: pulse 1s infinite;
-        }
-        
-        .stop-btn {
-            background: #95a5a6;
-            color: white;
-        }
-        
-        .stop-btn:hover {
-            background: #7f8c8d;
-        }
-        
-        .play-recorded-btn {
-            background: #27ae60;
-            color: white;
-        }
-        
-        .play-recorded-btn:hover {
-            background: #219a52;
-        }
-        
-        .word-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #3498db;
-            border-radius: 10px;
-            font-size: 1.1em;
-            margin-top: 10px;
-        }
-        
         .add-word-btn {
             background: #27ae60;
             color: white;
@@ -175,12 +104,6 @@
         .add-word-btn:hover {
             background: #219a52;
             transform: translateY(-2px);
-        }
-        
-        .add-word-btn:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            transform: none;
         }
         
         .words-display {
@@ -219,20 +142,11 @@
         
         .word-image {
             width: 100%;
-            height: 200px;
+            height: 250px;
             object-fit: cover;
             border-radius: 15px;
             margin-bottom: 15px;
             border: 2px solid #ecf0f1;
-        }
-        
-        .word-title {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .card-controls {
@@ -286,12 +200,6 @@
             font-weight: bold;
         }
         
-        .status-recording {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        
         .status-error {
             background: #f8d7da;
             color: #721c24;
@@ -302,12 +210,6 @@
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
         }
         
         @keyframes cardPulse {
@@ -364,13 +266,9 @@
                 height: 180px;
             }
             
-            .record-controls {
+            .upload-inputs {
                 flex-direction: column;
-                gap: 8px;
-            }
-            
-            .record-btn, .stop-btn, .play-recorded-btn {
-                max-width: none;
+                gap: 10px;
             }
         }
     </style>
@@ -378,62 +276,52 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🇰🇷 글자 놀이 🎵</h1>
-            <p>아이들이 쓴 한글로 함께 배워요!</p>
+            <h1>📝 글자놀이 🎵</h1>
+            <p>사진을 찍고 음성을 올려서 카드를 만들어요!</p>
         </div>
         
         <div class="instructions">
             <h3>📝 사용 방법</h3>
             <ul>
-                <li>1. 아이가 쓴 단어 사진을 선택하세요</li>
-                <li>2. 음성파일을 업로드하거나 직접 녹음하세요</li>
-                <li>3. 단어 이름을 입력하고 추가하세요</li>
+                <li>1. 글자가 적힌 사진을 찍거나 선택하세요</li>
+                <li>2. 음성 파일을 업로드하세요</li>
+                <li>3. 카드 만들기 버튼을 눌러주세요</li>
                 <li>4. 완성된 카드를 터치하면 음성이 재생됩니다!</li>
             </ul>
         </div>
         
         <div class="upload-section">
-            <div class="upload-group">
-                <h3>📷 단어 사진 선택</h3>
-                <div class="file-input-wrapper">
-                    <input type="file" id="imageInput" class="file-input" accept="image/*" capture="environment">
-                    <div class="file-input-button">
-                        📸 사진 선택하기
+            <div class="upload-inputs" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between;">
+                <div style="flex: 1; min-width: 250px;">
+                    <h3 style="text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 1.1em;">📷 사진</h3>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="imageInput" class="file-input" accept="image/*">
+                        <div class="file-input-button">
+                            📷 사진 찍기 / 선택하기
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="flex: 1; min-width: 250px;">
+                    <h3 style="text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 1.1em;">🎤 음성</h3>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="audioInput" class="file-input" accept="audio/*">
+                        <div class="file-input-button">
+                            🔊 음성 파일 선택
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="upload-group">
-                <h3>🎤 음성 추가</h3>
-                <div class="file-input-wrapper">
-                    <input type="file" id="audioInput" class="file-input" accept="audio/*">
-                    <div class="file-input-button">
-                        🔊 음성 파일 선택하기
-                    </div>
-                </div>
-                
-                <div class="record-controls">
-                    <button id="recordBtn" class="record-btn">🎤 녹음</button>
-                    <button id="stopBtn" class="stop-btn" disabled>⏹️ 정지</button>
-                    <button id="playRecordedBtn" class="play-recorded-btn" disabled>▶️ 재생</button>
-                </div>
-                
-                <div id="statusMessage"></div>
-            </div>
-            
-            <div class="upload-group">
-                <h3>✏️ 단어 입력</h3>
-                <input type="text" id="wordText" class="word-input" placeholder="예: 동해물과">
-            </div>
-            
-            <button id="addWordBtn" class="add-word-btn">➕ 단어 카드 만들기</button>
+            <div id="statusMessage"></div>
+            <button id="addWordBtn" class="add-word-btn">➕ 카드 만들기</button>
         </div>
         
         <div class="words-display">
-            <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">🎯 우리가 만든 단어 카드</h2>
+            <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">🎯 우리가 만든 글자놀이 카드</h2>
             <div id="wordsGrid" class="words-grid">
                 <div class="empty-state">
-                    <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 단어 카드를 만들어주세요! 😊</p>
+                    <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 카드를 만들어주세요! 😊</p>
                 </div>
             </div>
         </div>
@@ -442,20 +330,13 @@
     <script>
         // 전역 변수
         let wordsData = [];
-        let mediaRecorder = null;
-        let recordedChunks = [];
-        let recordedAudioBlob = null;
         let currentAudio = null;
 
         // DOM 요소들
         const imageInput = document.getElementById('imageInput');
         const audioInput = document.getElementById('audioInput');
-        const wordText = document.getElementById('wordText');
         const addWordBtn = document.getElementById('addWordBtn');
         const wordsGrid = document.getElementById('wordsGrid');
-        const recordBtn = document.getElementById('recordBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        const playRecordedBtn = document.getElementById('playRecordedBtn');
         const statusMessage = document.getElementById('statusMessage');
 
         // 상태 메시지 표시 함수
@@ -470,7 +351,7 @@
         imageInput.addEventListener('change', function(e) {
             const button = this.parentElement.querySelector('.file-input-button');
             if (e.target.files.length > 0) {
-                button.textContent = `📸 ${e.target.files[0].name}`;
+                button.textContent = `📷 ${e.target.files[0].name}`;
                 button.style.background = '#27ae60';
             }
         });
@@ -480,87 +361,10 @@
             if (e.target.files.length > 0) {
                 button.textContent = `🔊 ${e.target.files[0].name}`;
                 button.style.background = '#27ae60';
-                recordedAudioBlob = null; // 파일 선택시 녹음 데이터 초기화
-                playRecordedBtn.disabled = true;
             }
         });
 
-        // 녹음 기능 초기화
-        async function initRecording() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        sampleRate: 44100
-                    } 
-                });
-                
-                mediaRecorder = new MediaRecorder(stream, {
-                    mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/wav'
-                });
-                
-                mediaRecorder.ondataavailable = function(event) {
-                    if (event.data.size > 0) {
-                        recordedChunks.push(event.data);
-                    }
-                };
-                
-                mediaRecorder.onstop = function() {
-                    recordedAudioBlob = new Blob(recordedChunks, { 
-                        type: mediaRecorder.mimeType 
-                    });
-                    recordedChunks = [];
-                    playRecordedBtn.disabled = false;
-                    showStatus('녹음이 완료되었습니다! 재생 버튼을 눌러 확인해보세요.', 'success');
-                    
-                    // 스트림 정리
-                    stream.getTracks().forEach(track => track.stop());
-                };
-                
-                return true;
-            } catch (error) {
-                console.error('마이크 접근 오류:', error);
-                showStatus('마이크에 접근할 수 없습니다. 브라우저 설정을 확인해주세요.', 'error');
-                return false;
-            }
-        }
-
-        // 녹음 시작
-        recordBtn.addEventListener('click', async function() {
-            if (await initRecording()) {
-                recordedChunks = [];
-                mediaRecorder.start();
-                
-                recordBtn.classList.add('recording');
-                recordBtn.disabled = true;
-                stopBtn.disabled = false;
-                playRecordedBtn.disabled = true;
-                
-                showStatus('🎤 녹음 중입니다... 정지 버튼을 눌러 완료하세요.', 'recording');
-            }
-        });
-
-        // 녹음 정지
-        stopBtn.addEventListener('click', function() {
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-                mediaRecorder.stop();
-            }
-            
-            recordBtn.classList.remove('recording');
-            recordBtn.disabled = false;
-            stopBtn.disabled = true;
-        });
-
-        // 녹음된 음성 재생
-        playRecordedBtn.addEventListener('click', function() {
-            if (recordedAudioBlob) {
-                const audioUrl = URL.createObjectURL(recordedAudioBlob);
-                playAudioFromUrl(audioUrl, this);
-            }
-        });
-
-        // 음성 재생 함수 (URL 버전)
+        // 음성 재생 함수
         function playAudioFromUrl(audioUrl, element) {
             // 기존 오디오 정지
             if (currentAudio) {
@@ -579,7 +383,6 @@
             // 재생 시작 애니메이션
             element.classList.add('playing');
             
-            // 모바일에서 재생을 위한 사용자 상호작용 후 재생
             const playPromise = audio.play();
             
             if (playPromise !== undefined) {
@@ -612,25 +415,19 @@
             playAudioFromUrl(audioUrl, cardElement);
         }
 
-        // 단어 추가
+        // 카드 추가
         addWordBtn.addEventListener('click', function() {
             const imageFile = imageInput.files[0];
             const audioFile = audioInput.files[0];
-            const text = wordText.value.trim();
 
             // 유효성 검사
             if (!imageFile) {
-                showStatus('단어 이미지를 선택해주세요!', 'error');
+                showStatus('사진을 선택해주세요!', 'error');
                 return;
             }
             
-            if (!audioFile && !recordedAudioBlob) {
-                showStatus('음성 파일을 선택하거나 녹음해주세요!', 'error');
-                return;
-            }
-            
-            if (!text) {
-                showStatus('단어를 입력해주세요!', 'error');
+            if (!audioFile) {
+                showStatus('음성 파일을 선택해주세요!', 'error');
                 return;
             }
 
@@ -638,25 +435,15 @@
             const imageUrl = URL.createObjectURL(imageFile);
             
             // 오디오 URL 생성
-            let audioUrl;
-            let audioName;
-            
-            if (recordedAudioBlob) {
-                audioUrl = URL.createObjectURL(recordedAudioBlob);
-                audioName = '녹음된 음성';
-            } else {
-                audioUrl = URL.createObjectURL(audioFile);
-                audioName = audioFile.name;
-            }
+            const audioUrl = URL.createObjectURL(audioFile);
 
-            // 단어 데이터 생성
+            // 카드 데이터 생성
             const wordData = {
                 id: Date.now(),
-                text: text,
                 imageUrl: imageUrl,
                 audioUrl: audioUrl,
                 imageName: imageFile.name,
-                audioName: audioName
+                audioName: audioFile.name
             };
 
             // 데이터 배열에 추가
@@ -668,15 +455,15 @@
             // 입력 필드 초기화
             resetInputs();
             
-            showStatus('새로운 단어 카드가 추가되었습니다!', 'success');
+            showStatus('새로운 카드가 추가되었습니다!', 'success');
         });
 
-        // 단어들을 카드 형태로 표시
+        // 카드들을 화면에 표시
         function displayWords() {
             if (wordsData.length === 0) {
                 wordsGrid.innerHTML = `
                     <div class="empty-state">
-                        <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 단어 카드를 만들어주세요! 😊</p>
+                        <p>아직 만든 카드가 없어요.<br>위에서 첫 번째 카드를 만들어주세요! 😊</p>
                     </div>
                 `;
                 return;
@@ -685,9 +472,8 @@
             wordsGrid.innerHTML = wordsData.map(word => `
                 <div class="word-card" onclick="playCardAudio('${word.audioUrl}', this)">
                     <img src="${word.imageUrl}" 
-                         alt="${word.text}" 
+                         alt="카드 이미지" 
                          class="word-image">
-                    <div class="word-title">${word.text}</div>
                     <div class="card-controls">
                         <div class="play-icon">🔊</div>
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteWord(${word.id});">🗑️</button>
@@ -696,12 +482,12 @@
             `).join('');
         }
 
-        // 단어 삭제
+        // 카드 삭제
         function deleteWord(id) {
-            if (confirm('이 단어 카드를 삭제하시겠습니까?')) {
+            if (confirm('이 카드를 삭제하시겠습니까?')) {
                 wordsData = wordsData.filter(word => word.id !== id);
                 displayWords();
-                showStatus('단어 카드가 삭제되었습니다.', 'success');
+                showStatus('카드가 삭제되었습니다.', 'success');
             }
         }
 
@@ -709,29 +495,17 @@
         function resetInputs() {
             imageInput.value = '';
             audioInput.value = '';
-            wordText.value = '';
-            recordedAudioBlob = null;
             
             // 버튼 텍스트 초기화
-            document.querySelector('#imageInput').parentElement.querySelector('.file-input-button').textContent = '📸 사진 선택하기';
+            document.querySelector('#imageInput').parentElement.querySelector('.file-input-button').textContent = '📷 사진 찍기 / 선택하기';
             document.querySelector('#imageInput').parentElement.querySelector('.file-input-button').style.background = '#3498db';
             
-            document.querySelector('#audioInput').parentElement.querySelector('.file-input-button').textContent = '🔊 음성 파일 선택하기';
+            document.querySelector('#audioInput').parentElement.querySelector('.file-input-button').textContent = '🔊 음성 파일 선택';
             document.querySelector('#audioInput').parentElement.querySelector('.file-input-button').style.background = '#3498db';
-            
-            playRecordedBtn.disabled = true;
         }
-
-        // 엔터 키로 단어 추가
-        wordText.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addWordBtn.click();
-            }
-        });
 
         // 모바일에서 오디오 재생을 위한 초기화
         document.addEventListener('DOMContentLoaded', function() {
-            // 사용자의 첫 번째 터치/클릭 시 오디오 컨텍스트 활성화
             document.body.addEventListener('touchstart', function initAudio() {
                 const audio = new Audio();
                 audio.play().then(() => {
